@@ -1,0 +1,49 @@
+.form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 500px;
+  height: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #20c997b9;
+}
+
+.form label {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.form input {
+  width: 370px;
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.form button {
+  padding: 20px;
+  width: 370px;
+  height: auto;
+  font-size: 28px;
+  font-weight: 600;
+  border: none;
+  background-color: #20c996;
+}
+
+.form button:hover {
+  background-color: #30e08eb9;
+}
+
+.form button:active {
+  -webkit-transform: scale(0.98);
+          transform: scale(0.98);
+}
+/*# sourceMappingURL=Form.module.css.map */
