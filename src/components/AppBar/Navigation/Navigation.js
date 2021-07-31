@@ -1,8 +1,9 @@
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { authSelectors } from "../../../redux/auth";
 
-const Navigation = ({isAuth}) => {
+const Navigation = () => {
+    const isAuth = useSelector(authSelectors.getIsAuth);
     return (
         <>
         <NavLink exact to="/" className="NavLink" activeClassName="NavLink--active">Home</NavLink>
@@ -11,8 +12,5 @@ const Navigation = ({isAuth}) => {
     )
 }
 
-const mstp = state => ({
-    isAuth: authSelectors.getIsAuth(state),
-})
 
-export default connect(mstp)(Navigation);
+export default Navigation;

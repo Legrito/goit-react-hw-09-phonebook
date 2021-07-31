@@ -1,13 +1,17 @@
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ContactItem } from './ContactItem';
 import { useEffect } from 'react';
 import styles from './ContactList.module.css';
 import operations from './../../redux/operations';
 import { getLoading, getFilteredContacts } from '../../redux/selectors';
 
-const ContactList = ({ contacts, onClick, getContacts, loading}) => {
-  useEffect(() => getContacts(),
-  [getContacts])
+const ContactList = () => {
+  const dispatch = useDispatch();
+  const onClick = id => dispatch(operations.deleteContact(id))
+  useEffect(() => dispatch(operations.getContacts()),
+  [dispatch]);
+  const contacts = useSelector(getFilteredContacts);
+  const loading = useSelector(getLoading);
     return (
     <ul className={styles.list}>
       {loading && 'Loading...'}
@@ -17,15 +21,5 @@ const ContactList = ({ contacts, onClick, getContacts, loading}) => {
     )
 }
 
-const mapStatetoProps = state => ({
-  contacts: getFilteredContacts(state),
-  loading: getLoading(state)
-})
 
-const mapDispatchToProps = dispatch => ({
-  onClick: id => dispatch(operations.deleteContact(id)),
-  getContacts: () => dispatch(operations.getContacts())
-})
-
-
-export default connect(mapStatetoProps, mapDispatchToProps)(ContactList)
+export default ContactList;

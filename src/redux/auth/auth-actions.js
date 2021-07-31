@@ -16,7 +16,7 @@ const getCurrentUserRequestRequest = createAction('auth/getCurrentUserRequestReq
 const getCurrentUserRequestSuccess = createAction('auth/getCurrentUserRequestSuccess');
 const getCurrentUserRequestError = createAction('auth/getCurrentUserRequestError');
 
-export default {
+const action = {
     registerRequest,
     registerSuccess,
     registerError,
@@ -30,3 +30,5 @@ export default {
     getCurrentUserRequestSuccess,
     getCurrentUserRequestError
 }
+
+export default action;

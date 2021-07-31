@@ -1,7 +1,6 @@
 import ContactForm from '../components/Form/Form'
 import ContactList from '../components/ContactsList/ContactList';
 import Filter from '../components/Filter/Filter';
-import phone from '../data/contacts.png';
 
 const ContactsView = () => {
     return (

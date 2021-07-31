@@ -1,11 +1,12 @@
 import { Navigation } from './Navigation';
 import { AuthNav } from './AuthNav';
 import { UserMenu } from './UserMenu';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { authSelectors } from '../../redux/auth';
 import styles from './AppBar.module.css';
 
-const AppBar = ({isAuth}) => {
+const AppBar = () => {
+    const isAuth = useSelector(authSelectors.getIsAuth);
     return (
         <nav className={styles.main__nav}>
         <Navigation />
@@ -14,8 +15,5 @@ const AppBar = ({isAuth}) => {
     )
 }
 
-const mstp = state => ({
-    isAuth: authSelectors.getIsAuth(state),
-})
 
-export default connect(mstp)(AppBar);
+export default AppBar;

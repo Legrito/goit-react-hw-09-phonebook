@@ -1,74 +1,68 @@
-import { Component } from 'react';
-import shortid from 'shortid';
+import { useState } from 'react';
 import {authOperations} from '../../redux/auth';
-import { connect } from 'react-redux';
 import { Form, Button, FloatingLabel } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
 
 
-class LoginForm extends Component {
-    state = {
-        email: '',
-        password: ''
-      }
-    
-  nameInputId = shortid.generate();
-  numberInputId = shortid.generate();
+const LoginForm = () => {
+  const dispatch = useDispatch();
 
-  
-  handleChange = (e) => {
-    const { name, value } = e.currentTarget;
 
-    this.setState({ [name]: value});
+
+  const [email, setEmail] = useState('');
+  const handleEmailChange = e => {
+    setEmail(e.target.value)
   }
 
-  clearInput = () => {
-    this.setState({ email: '', password: ''})
+  const [password, setPassword] = useState('');
+  const handlePasswordChange = e => {
+    setPassword(e.target.value)
   }
 
-  handlerSubmit = (e) => {
+  const clearInput = () => {
+    setEmail('');
+    setPassword('');
+  }
+
+
+    const handlerSubmit = (e) => {
     e.preventDefault();
 
-    this.props.onLogin(this.state);
+    dispatch(authOperations.logIn({email, password}));
 
-    this.clearInput(); 
+    clearInput(); 
  }
 
-    render() {
-        const { email, password } = this.state;
 
-        return (
+  return (    
           <div className="container">
-          <Form onSubmit={this.handlerSubmit}>
+          <Form onSubmit={handlerSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <FloatingLabel
-              controlId="floatingInput"
               label="Email address"
               className="mb-3"
             >
             <Form.Control type="email"
                   name="email"
                   value={email}
-                  id={this.nameInputId}
                   title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
                   required
-                  onChange={this.handleChange}
+                  onChange={handleEmailChange}
                   placeholder="Enter email" />
                   </FloatingLabel>
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <FloatingLabel
-              controlId="floatingInput"
               label="Password"
               className="mb-3"
             >
             <Form.Control type="password"
                   name="password"
                   value={password}
-                  id={this.numberInputId}
                   title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
                   required
-                  onChange={this.handleChange}
+                  onChange={handlePasswordChange}
                   placeholder="Password" />
             </FloatingLabel>
           </Form.Group>
@@ -77,12 +71,7 @@ class LoginForm extends Component {
           </Button>
         </Form>
         </div>
-      )}
-
+  )
 }
 
-const mdtp = {
-  onLogin: authOperations.logIn,
-}
-
-export default connect(null, mdtp)(LoginForm);
+export default LoginForm;

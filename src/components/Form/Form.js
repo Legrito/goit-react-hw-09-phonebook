@@ -1,83 +1,75 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import shortid from 'shortid';
 import styles from './Form.module.css'
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import operations from './../../redux/operations';
 import { getItems } from '../../redux/selectors';
 
+const ContactForm = () => {
+  const dispatch = useDispatch();
 
-class ContactForm extends Component {
-    state = {
-        name: '',
-        number: ''
-      }
-    
-  nameInputId = shortid.generate();
-  numberInputId = shortid.generate();
-
-  
-  handleChange = (e) => {
-    const { name, value } = e.currentTarget;
-
-    this.setState({ [name]: value});
+  const [name, setName] = useState('');
+  const handleNameChange = e => {
+    setName(e.target.value)
   }
 
-  clearInput = () => {
-    this.setState({ name: '', number: ''})
+  const [number, setNumber] = useState('');
+  const handleNumberChange = e => {
+    setNumber(e.target.value)
   }
 
-  handlerSubmit = (e) => {
+  const nameInputId = shortid.generate();
+  const numberInputId = shortid.generate();
+
+  const savedContacts = useSelector(getItems);
+  const onSubmit = ({name, number}) => dispatch(operations.addContact({name, number}));
+  const clearInput = () => {
+    setName('');
+    setNumber('');
+  }
+
+    const handlerSubmit = (e) => {
     e.preventDefault();
-    this.props.savedContacts.find(contact => contact["name"] === this.state.name) 
+    savedContacts.find(contact => contact["name"] === name) 
       ? alert("The name is already exist")
-      : this.props.savedContacts.find(contact => contact["number"] === this.state.number) 
+      : savedContacts.find(contact => contact["number"] === number) 
       ? alert("The number  is already exist") 
-      : this.props.onSubmit(this.state);
+      : onSubmit({name, number});
 
-    this.clearInput(); 
+    clearInput(); 
  }
 
-    render() {
-        const { name, number } = this.state;
 
-        return (
-        <form className={styles.form} onSubmit={this.handlerSubmit}>
-        <label htmlFor={this.nameInputId}>Name </label>          
+  return (
+    <form className={styles.form} onSubmit={handlerSubmit}>
+        <label htmlFor={nameInputId}>Name </label>          
         <input
           type="text"
           name="name"
           value={name}
-          id={this.nameInputId}
+          id={nameInputId}
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
           required
-          onChange={this.handleChange}
+          onChange={handleNameChange}
         />
-
-        <label htmlFor={this.numberInputId}>Number </label>          
+    
+        <label htmlFor={numberInputId}>Number </label>          
         <input
           type="tel"
           name="number"
           value={number}
-          id={this.numberInputId}
+          id={numberInputId}
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
           required
-          onChange={this.handleChange}
+          onChange={handleNumberChange}
         />
-
-        <button type="submit">Add</button>
-      </form>
-      )}
-
+    
+         <button type="submit">Add</button>
+      </form>            
+      )
+  
 }
 
-const mapStatetoProps = state => ({
-  savedContacts: getItems(state)
-})
-
-const mapDispatchToProps = dispatch => ({
-  onSubmit: ({name, number}) => dispatch(operations.addContact({name, number}))
-})
-
-export default connect(mapStatetoProps, mapDispatchToProps)(ContactForm);
+export default ContactForm;

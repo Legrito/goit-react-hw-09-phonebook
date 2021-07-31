@@ -1,55 +1,57 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import shortid from 'shortid';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {authOperations} from '../../redux/auth';
 import { Form, Button } from 'react-bootstrap';
 import { authSelectors } from '../../redux/auth';
 
+const RegisterForm = () => {
+  const dispatch = useDispatch();
 
-class RegisterForm extends Component {
-    state = {
-        name: '',
-        email: '',
-        password: ''
-      }
-    
-  nameInputId = shortid.generate();
-  emailInputId = shortid.generate();
-  numberInputId = shortid.generate();
-
-  
-  handleChange = (e) => {
-    const { name, value } = e.currentTarget;
-
-    this.setState({ [name]: value});
+  const [name, setName] = useState('');
+  const handleNameChange = e => {
+    setName(e.target.value)
   }
 
-  clearInput = () => {
-    this.setState({ name: '', email: '', password: ''})
+  const [email, setEmail] = useState('');
+  const handleEmailChange = e => {
+    setEmail(e.target.value)
   }
 
-  handlerSubmit = (e) => {
+  const [password, setPassword] = useState('');
+  const handlePasswordChange = e => {
+    setPassword(e.target.value)
+  }
+
+  const isError = useSelector(authSelectors.getErrorMessage);
+
+  const clearInput = () => {
+    setName('');
+    setEmail('');
+    setPassword('');
+  }
+
+  const handlerSubmit = (e) => {
     e.preventDefault();
-    this.props.onRgister(this.state);
-    this.clearInput(); 
+
+    dispatch(authOperations.register({name, email, password}));
+
+    clearInput(); 
  }
 
-    render() {
-        const { name, email, password } = this.state;
-        console.log(this.props.isError, 'sdjghfjsdgfhd--------------------------------------');
-        return (
+  
+    return (
           <div className="container">
-            {!!this.props.isError && <p>{this.props.isError}</p>}
-          <Form onSubmit={this.handlerSubmit}>
+            {!!isError && <p>{isError}</p>}
+          <Form onSubmit={handlerSubmit}>
           <Form.Group className="mb-3" controlId="formBasicName">
             <Form.Label>Name</Form.Label>
-            <Form.Control type="text"
+            <Form.Control 
                   type="text"
                   name="name"
                   value={name}
                   title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
                   required
-                  onChange={this.handleChange}
+                  onChange={handleNameChange}
                   placeholder="Enter your name" />
           </Form.Group>
 
@@ -60,7 +62,7 @@ class RegisterForm extends Component {
                   value={email}
                   title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
                   required
-                  onChange={this.handleChange}
+                  onChange={handleEmailChange}
                   placeholder="Enter email" />
             <Form.Text className="text-muted">
               We'll never share your email with anyone else.
@@ -74,7 +76,7 @@ class RegisterForm extends Component {
                   value={password}
                   title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
                   required
-                  onChange={this.handleChange}
+                  onChange={handlePasswordChange}
                   placeholder="Password" />
           </Form.Group>
           <Button variant="success" type="submit">
@@ -82,54 +84,8 @@ class RegisterForm extends Component {
           </Button>
         </Form>
         </div>
-      //   <form onSubmit={this.handlerSubmit}>
-      //   <label htmlFor={this.nameInputId}>Name</label>          
-      //   <input
-      //     type="text"
-      //     name="name"
-      //     value={name}
-      //     id={this.nameInputId}
-      //     title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
-      //     required
-      //     onChange={this.handleChange}
-      //   />
-      //   <label htmlFor={this.nameInputId}>Email</label>          
-      //   <input
-      //     type="email"
-      //     name="email"
-      //     value={email}
-      //     id={this.emailInputId}
-      //     title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
-      //     required
-      //     onChange={this.handleChange}
-      //   />
-
-      //   <label htmlFor={this.numberInputId}>Password </label>          
-      //   <input
-      //     type="password"
-      //     name="password"
-      //     value={password}
-      //     id={this.numberInputId}
-      //     title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
-      //     required
-      //     onChange={this.handleChange}
-      //   />
-
-      //   <button type="submit">Register</button>
-      // </form>
-      )}
+     
+      )
 }
 
-// const mdtp = dispatch => ({
-//   onRgister: (data) => dispatch(authOperations.register(data))
-// })
-
-const mstp = state => ({
-  isError: authSelectors.getErrorMessage(state),
-})
-
-const mdtp = {
-  onRgister: authOperations.register,
-}
-
-export default connect(mstp, mdtp)(RegisterForm);
+export default RegisterForm;

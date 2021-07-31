@@ -1,4 +1,3 @@
-import { Button, Nav } from "react-bootstrap";
 import phone from '../data/contacts.png'
 
 const HomeView = () => {
